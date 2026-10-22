@@ -1,0 +1,276 @@
+/* Lift Off — visual system
+   Neutral base, one slate accent, sand for "check this". Sans-serif only.
+   Fit-read colours describe a role, not good or bad. */
+
+:root {
+  --lo-bg: #F7F6F3;
+  --lo-surface: #FFFFFF;
+  --lo-ink: #1E2226;
+  --lo-muted: #5F656D;
+  --lo-faint: #8A9097;
+  --lo-rule: #E3E1DC;
+  --lo-accent: #2D5A74;
+  --lo-accent-mid: #7FA3B8;
+  --lo-accent-soft: #E4EDF2;
+  --lo-neutral: #B9BDC2;
+  --lo-neutral-soft: #ECEBE7;
+  --lo-sand: #C9A66B;
+  --lo-sand-ink: #6E5222;
+  --lo-sand-soft: #F4ECDD;
+  --lo-radius: 10px;
+}
+
+body {
+  background: var(--lo-bg);
+  color: var(--lo-ink);
+  font-feature-settings: "tnum" 1, "cv11" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Navbar ---------------------------------------------------------- */
+.navbar {
+  border-bottom: 1px solid var(--lo-rule);
+  box-shadow: none;
+}
+.lo-brand { display: inline-flex; align-items: baseline; gap: 0.6rem; }
+.lo-brand__mark { font-weight: 700; letter-spacing: -0.01em; color: var(--lo-ink); }
+.lo-brand__sub { font-size: 0.82rem; color: var(--lo-muted); font-weight: 400; }
+.lo-nav-note { font-size: 0.8rem; color: var(--lo-muted); }
+.navbar .nav-link { font-weight: 500; }
+
+/* ---- Layout ---------------------------------------------------------- */
+.lo-layout { background: transparent; border: none; }
+.lo-sidebar {
+  background: var(--lo-surface);
+  border-right: 1px solid var(--lo-rule);
+}
+.lo-sidebar__title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--lo-muted);
+  margin-bottom: 0.75rem;
+}
+.lo-sidebar .control-label, .lo-sidebar label.form-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.lo-sidebar .form-check-label { font-size: 0.9rem; }
+.lo-mark-echo {
+  margin: -0.6rem 0 1rem;
+  font-size: 0.85rem;
+  color: var(--lo-muted);
+}
+.lo-note { font-size: 0.78rem; color: var(--lo-muted); line-height: 1.45; }
+
+.lo-head { margin: 0.5rem 0 1.25rem; max-width: 62rem; }
+.lo-head__title {
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
+}
+.lo-head__dek { font-size: 1.02rem; color: var(--lo-muted); margin: 0; line-height: 1.5; }
+
+.lo-notice {
+  background: var(--lo-sand-soft);
+  border-left: 3px solid var(--lo-sand);
+  color: var(--lo-sand-ink);
+  padding: 0.65rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* ---- Summary cards --------------------------------------------------- */
+.lo-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+@media (max-width: 991px) { .lo-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 575px) {
+  .lo-kpis { gap: 0.6rem; }
+  .lo-kpi { padding: 0.75rem 0.8rem; }
+  .lo-kpi__value { font-size: 1.45rem; }
+  .lo-kpi__note { font-size: 0.76rem; }
+  .lo-head__title { font-size: 1.5rem; }
+  .lo-brand__sub { display: none; }
+}
+
+.lo-kpi {
+  background: var(--lo-surface);
+  border: 1px solid var(--lo-rule);
+  border-radius: var(--lo-radius);
+  padding: 0.9rem 1rem 1rem;
+}
+.lo-kpi__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--lo-muted);
+}
+.lo-kpi__value {
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0.3rem 0 0.25rem;
+}
+.lo-kpi__note { font-size: 0.82rem; color: var(--lo-muted); line-height: 1.4; }
+.lo-kpi--caution { border-top: 3px solid var(--lo-sand); }
+.lo-kpi--caution .lo-kpi__value { color: var(--lo-sand-ink); }
+
+/* ---- Fit-read strip -------------------------------------------------- */
+.lo-strip { margin-bottom: 1.25rem; }
+.lo-strip__bar {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  gap: 2px;
+  background: var(--lo-bg);
+}
+.lo-strip__seg { min-width: 4px; }
+.lo-strip__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin-top: 0.6rem;
+}
+.lo-strip__key { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; }
+.lo-strip__dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.lo-strip__name { color: var(--lo-muted); }
+.lo-strip__n { font-weight: 600; }
+
+.lo-seg--would_lead { background: var(--lo-accent); }
+.lo-seg--top_three { background: var(--lo-accent-mid); }
+.lo-seg--depth { background: var(--lo-neutral); }
+.lo-seg--well_above { background: var(--lo-sand); }
+.lo-seg--cant_tell {
+  background: repeating-linear-gradient(135deg, #C9CDD1 0 3px, #ECEDEF 3px 6px);
+}
+.lo-seg--verified_active { background: var(--lo-accent-soft); outline: 1px solid var(--lo-accent-mid); outline-offset: -1px; }
+.lo-seg--none_listed {
+  background: repeating-linear-gradient(135deg, var(--lo-sand) 0 3px, var(--lo-sand-soft) 3px 6px);
+}
+.lo-seg--verified_no_marks, .lo-seg--verified_no_event { background: #D8D6D0; }
+
+/* ---- Cards ----------------------------------------------------------- */
+.lo-card {
+  border: 1px solid var(--lo-rule);
+  border-radius: var(--lo-radius);
+  box-shadow: none;
+  background: var(--lo-surface);
+}
+.lo-card__head {
+  background: transparent;
+  border-bottom: 1px solid var(--lo-rule);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--lo-muted);
+}
+@media (min-width: 992px) {
+  .lo-evidence { position: sticky; top: 1rem; }
+}
+
+/* ---- Badges ---------------------------------------------------------- */
+.lo-badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.38rem 0.55rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.lo-badge--would_lead { background: var(--lo-accent); color: #fff; }
+.lo-badge--top_three { background: var(--lo-accent-soft); color: var(--lo-accent); }
+.lo-badge--depth { background: var(--lo-neutral-soft); color: var(--lo-ink); }
+.lo-badge--well_above { background: var(--lo-sand-soft); color: var(--lo-sand-ink); }
+.lo-badge--cant_tell { background: #fff; color: var(--lo-muted); border: 1px dashed var(--lo-faint); }
+.lo-badge--verified_active { background: #fff; color: var(--lo-accent); border-color: var(--lo-accent-mid); }
+.lo-badge--none_listed { background: #fff; color: var(--lo-sand-ink); border: 1px dashed var(--lo-sand); }
+.lo-badge--verified_no_marks,
+.lo-badge--verified_no_event { background: #fff; color: var(--lo-muted); border-color: var(--lo-rule); }
+
+/* ---- Table cells ----------------------------------------------------- */
+.lo-prog__name { font-weight: 600; }
+.lo-prog__meta { font-size: 0.78rem; color: var(--lo-muted); }
+.lo-num { font-variant-numeric: tabular-nums; }
+.lo-rank { display: inline-flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
+.lo-rank__main { font-weight: 600; font-variant-numeric: tabular-nums; }
+.lo-rank__sub { font-size: 0.76rem; color: var(--lo-muted); white-space: nowrap; }
+.lo-muted { color: var(--lo-faint); }
+.lo-mark { display: inline-flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
+.lo-mark__m { font-variant-numeric: tabular-nums; font-weight: 500; white-space: nowrap; }
+.lo-mark__ftin { font-size: 0.76rem; color: var(--lo-muted); white-space: nowrap; }
+.lo-wind {
+  font-size: 0.7rem;
+  color: var(--lo-sand-ink);
+  background: var(--lo-sand-soft);
+  border-radius: 4px;
+  padding: 0 0.3rem;
+  margin-top: 0.15rem;
+}
+.ReactTable .rt-search { margin-bottom: 0.75rem; }
+.ReactTable .rt-tr-group { cursor: pointer; }
+
+/* ---- Evidence -------------------------------------------------------- */
+.lo-empty { color: var(--lo-muted); margin: 1rem 0; }
+.lo-ev__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+.lo-ev__name { font-size: 1.25rem; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+.lo-ev__sentence { font-size: 0.95rem; line-height: 1.55; margin-bottom: 1rem; }
+.lo-ev__table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-bottom: 1rem; }
+.lo-ev__table th {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--lo-muted);
+  border-bottom: 1px solid var(--lo-rule);
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+}
+.lo-ev__table td { padding: 0.5rem; border-bottom: 1px solid var(--lo-rule); vertical-align: top; }
+.lo-ev__table .lo-ev__mark, .lo-ev__table .lo-ev__arr { text-align: right; }
+.lo-ev__ath { font-weight: 500; }
+.lo-ev__you td { background: var(--lo-accent-soft); font-weight: 600; }
+.lo-ev__you td:first-child { box-shadow: inset 3px 0 0 var(--lo-accent); }
+.lo-ev__cutoff td {
+  font-size: 0.78rem;
+  color: var(--lo-sand-ink);
+  background: repeating-linear-gradient(135deg, #fff 0 6px, var(--lo-sand-soft) 6px 12px);
+  border-top: 1px dashed var(--lo-sand);
+  border-bottom: 1px dashed var(--lo-sand);
+  text-align: center;
+}
+.lo-ev__verify {
+  font-size: 0.85rem;
+  background: var(--lo-neutral-soft);
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.lo-link { font-size: 0.88rem; font-weight: 600; color: var(--lo-accent); text-decoration: none; }
+.lo-link:hover { text-decoration: underline; }
+
+.lo-footer {
+  font-size: 0.78rem;
+  color: var(--lo-muted);
+  max-width: 60rem;
+  margin: 1.5rem 0 2rem;
+  line-height: 1.5;
+}

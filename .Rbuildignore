@@ -1,0 +1,12 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^data-raw$
+^dev$
+^docs$
+^app\.R$
+^rsconnect$
+^CLAUDE\.md$
+^README\.md$
+^\.github$
+^renv$
+^renv\.lock$

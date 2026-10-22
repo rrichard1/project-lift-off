@@ -1,0 +1,38 @@
+Package: liftoff
+Title: Program-Fit Analytics for a Collegiate Jumps Recruit
+Version: 0.1.0
+Authors@R:
+    person("Roland", "Richard", , "roland.a.richard@gmail.com", role = c("aut", "cre"))
+Description: Shows where an athlete's high jump and long jump marks would
+    sit on NCAA Division I and II programs' performance lists, with an
+    explicit coverage state for every program and event. Descriptive only:
+    no blended scores and no predictions of coach behavior.
+License: file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Depends:
+    R (>= 4.1.0)
+Imports:
+    bslib,
+    cli,
+    config,
+    dplyr (>= 1.1.0),
+    golem,
+    htmltools,
+    purrr,
+    reactable,
+    readr,
+    rlang,
+    shiny (>= 1.7.0),
+    stats,
+    stringr,
+    tibble,
+    yaml
+Suggests:
+    devtools,
+    pkgload,
+    readxl,
+    testthat (>= 3.0.0),
+    tidyr
+Config/testthat/edition: 3

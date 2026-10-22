@@ -1,0 +1,16 @@
+# Athlete inputs. These seed the app; the athlete can change them on screen.
+# Marks are in metres. Status notes say what still needs confirming.
+athlete:
+  label: "Athlete"
+  class_of: 2027
+  enroll_year: 2027          # first college season is 2027-28
+  marks:
+    HJ:
+      best_m: 2.03
+      status: "confirm"
+    LJ:
+      best_m: 6.81
+      status: "confirm; note whether wind-legal"
+# Phase 3 inputs (not used yet)
+  home_state: null
+  intended_major: null

@@ -1,0 +1,43 @@
+#' Access files in the current app
+#'
+#' @param ... character vectors, specifying subdirectory and file(s)
+#'   within your package. The default, none, returns the root of the app.
+#'
+#' @noRd
+app_sys <- function(...) {
+  system.file(..., package = "liftoff")
+}
+
+#' Read App Config
+#'
+#' @param value Value to retrieve from the config file.
+#' @param config GOLEM_CONFIG_ACTIVE value. If unset, R_CONFIG_ACTIVE.
+#'   If unset, "default".
+#' @param use_parent Logical, scan the parent directory for config file.
+#' @param file Location of the config file
+#'
+#' @noRd
+get_golem_config <- function(
+  value,
+  config = Sys.getenv(
+    "GOLEM_CONFIG_ACTIVE",
+    Sys.getenv("R_CONFIG_ACTIVE", "default")
+  ),
+  use_parent = TRUE,
+  file = app_sys("golem-config.yml")
+) {
+  config::get(
+    value = value,
+    config = config,
+    file = file,
+    use_parent = use_parent
+  )
+}
+
+#' Read the athlete profile
+#'
+#' @return A list with the athlete's label, enrollment year and marks.
+#' @noRd
+read_athlete_profile <- function(file = app_sys("athlete", "athlete_profile.yml")) {
+  yaml::read_yaml(file)$athlete
+}

@@ -1,0 +1,26 @@
+built_at: 2026-10-22T11:41:18-0400
+source_files: 2026_outdoor_d1_mens_jumps.csv
+lists:
+- list_id: 2026_outdoor_D1_HJ
+  size: 513
+  floor_m: 1.9
+  latest_meet_date: '2026-05-17'
+  parsed_at: '2026-05-22T14:03:55Z'
+  source_url: https://www.tfrrs.org/lists/5602
+- list_id: 2026_outdoor_D1_LJ
+  size: 500
+  floor_m: 6.95
+  latest_meet_date: '2026-05-17'
+  parsed_at: '2026-05-22T14:04:09Z'
+  source_url: https://www.tfrrs.org/lists/5602
+- list_id: 2026_outdoor_D1_TJ
+  size: 492
+  floor_m: 11.52
+  latest_meet_date: '2026-05-17'
+  parsed_at: '2026-05-22T14:04:23Z'
+  source_url: https://www.tfrrs.org/lists/5602
+row_counts:
+  programs: 257
+  event_lists: 3
+  athlete_marks: 1505
+  program_events: 771

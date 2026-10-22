@@ -1,0 +1,2 @@
+program_id,event_code,season,status,checked_on,checked_by,source_url,notes
+AL_college_m_Auburn,HJ,2026,no_marks_on_tfrrs,,Roland,https://www.tfrrs.org/teams/tf/AL_college_m_Auburn.html,"Carried over from the v0 missing-HJ audit (verified_by_user = TRUE). Team page showed LJ and other events but no HJ section. Check date not recorded."

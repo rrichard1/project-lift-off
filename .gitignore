@@ -1,0 +1,20 @@
+# R session artifacts
+.Rhistory
+.RData
+.Rproj.user/
+.Ruserdata
+
+# renv: commit renv.lock, never the library
+renv/library/
+renv/staging/
+renv/local/
+
+# Deployment and scratch output
+rsconnect/
+__*.txt
+tmp_*
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

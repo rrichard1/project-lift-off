@@ -1,0 +1,4 @@
+list_id,event_code,season,season_type,division,list_size,program_count,floor_mark_m,top_mark_m,latest_meet_date,source_url,parsed_at
+2026_outdoor_D1_HJ,HJ,2026,outdoor,D1,513,210,1.9,2.31,2026-05-17,https://www.tfrrs.org/lists/5602,2026-05-22T14:03:55Z
+2026_outdoor_D1_LJ,LJ,2026,outdoor,D1,500,202,6.95,8.27,2026-05-17,https://www.tfrrs.org/lists/5602,2026-05-22T14:04:09Z
+2026_outdoor_D1_TJ,TJ,2026,outdoor,D1,492,216,11.52,17.09,2026-05-17,https://www.tfrrs.org/lists/5602,2026-05-22T14:04:23Z

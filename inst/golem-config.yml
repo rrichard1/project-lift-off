@@ -1,0 +1,21 @@
+default:
+  golem_name: liftoff
+  golem_version: 0.1.0
+  app_prod: no
+  # Events surfaced in the app. TJ stays in the raw data only (DECISIONS D-002).
+  events:
+    - HJ
+    - LJ
+  divisions:
+    - D1
+    - D2
+  # "Well above current level" fires when a program's best mark exceeds the
+  # athlete's mark by at least this much (metres). Judgment calls: confirm
+  # before changing (SPEC §7, CLAUDE.md rule 8).
+  reach_threshold_m:
+    HJ: 0.15
+    LJ: 0.45
+production:
+  app_prod: yes
+dev:
+  golem_wd: !expr golem::pkg_path()
