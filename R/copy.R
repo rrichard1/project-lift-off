@@ -173,3 +173,132 @@ copy_footer <- paste(
   "Lists show season bests only, so a program's jumpers below the list cutoff are not visible.",
   "Fit reads describe where a mark would have ranked. They say nothing about how a program evaluates athletes."
 )
+
+# ---- Target Board ---------------------------------------------------------
+
+#' Board group labels and one-line descriptions
+#'
+#' Groups are the athlete's own sort of the shortlist, set by hand in
+#' data-raw/manual/target_board.csv. They are not fit reads.
+#' @noRd
+copy_board_group_label <- c(
+  established_group = "Established jumps group",
+  smaller_group = "Smaller jumps group",
+  power_conference = "Power conference",
+  division_ii = "Division II"
+)
+
+#' @rdname copy_board_group_label
+#' @noRd
+copy_board_group_help <- c(
+  established_group = "Programs carrying several listed high jumpers, with your mark inside the group's range.",
+  smaller_group = "Programs with fewer listed high jumpers, where your mark sits near the top of the group.",
+  power_conference = "Power-conference programs that also carry jumpers close to your mark.",
+  division_ii = "Programs with finalists at the 2026 Division II outdoor championships. Division II lists are not loaded yet."
+)
+
+#' Outreach state labels
+#' @noRd
+copy_contact_label <- c(
+  no_coach = "No coach on file",
+  coach_on_file = "Coach on file",
+  sent = "Sent",
+  received = "Reply"
+)
+
+#' Short outreach status for the board table
+#'
+#' @param state `contact_state` from `board_outreach()`.
+#' @param last_date Date of the last logged contact.
+#' @param channel Channel of the last logged contact.
+#' @noRd
+copy_contact_status <- function(state, last_date, channel) {
+  when <- ifelse(is.na(last_date), "", paste0(" ", format(as.Date(last_date), "%b "), as.integer(format(as.Date(last_date), "%d"))))
+  how <- ifelse(is.na(channel) | channel == "", "", paste0(" · ", channel))
+  dplyr::case_when(
+    state %in% c("sent", "received") ~ paste0(unname(copy_contact_label[state]), when, how),
+    .default = unname(copy_contact_label[state])
+  )
+}
+
+#' Sentence for a program evidenced by championship results only
+#' @noRd
+copy_champs_sentence <- function(school_name, event_code, finalists, best_m, best_place, meet_name) {
+  event <- tolower(copy_event_names[[event_code]])
+  if (is.na(finalists) || finalists == 0) {
+    return(paste0(school_name, " had no finalists in the ", event, " at the ", meet_name, "."))
+  }
+  who <- if (finalists == 1) "one finalist" else paste0(finalists, " finalists")
+  best <- if (is.na(best_m)) {
+    " None recorded a mark in the final."
+  } else {
+    paste0(" The best finished ", ordinal(best_place), " at ", format_mark(best_m), ".")
+  }
+  paste0(school_name, " had ", who, " in the ", event, " at the ", meet_name, ".", best)
+}
+
+#' Where the athlete's mark would have placed in a championship final
+#' @noRd
+copy_champs_standing <- function(place_equiv, field, meet_name, last_mark_m) {
+  if (place_equiv > field) {
+    paste0("Your mark is below every finalist at the ", meet_name, ". The last finalist recorded ", format_mark(last_mark_m), ".")
+  } else {
+    paste0("Your mark would have placed ", ordinal(place_equiv), " of ", field, " finalists at the ", meet_name, ".")
+  }
+}
+
+#' Ordinal number ("1st", "12th", "22nd")
+#' @noRd
+ordinal <- function(n) {
+  suffix <- ifelse(n %% 100 %in% 11:13, "th", c("th", "st", "nd", "rd", rep("th", 6))[n %% 10 + 1])
+  paste0(n, suffix)
+}
+
+copy_board <- list(
+  title = "Target Board",
+  subtitle = "The programs on your shortlist, the evidence behind each one, and where your outreach stands.",
+  event_label = "Event",
+  marks_note = "Marks come from the athlete profile. Try other marks on the Program Fit page.",
+  table_heading = "Programs on the board",
+  evidence_heading = "Program",
+  evidence_empty = "Select a program to see its jumpers, notes and coaches.",
+  group = "Group",
+  program = "Program",
+  fit_read = "Fit read",
+  rank = "Your rank",
+  top_mark = "Program best",
+  strip = "Jumpers vs. you",
+  outreach = "Outreach",
+  no_list = "No list loaded",
+  no_list_help = "Division II lists are not loaded yet. Evidence comes from championship results.",
+  strip_in = "In school fall 2027",
+  strip_out = "Gone by fall 2027",
+  strip_you = "Your mark",
+  strip_note = "Dots are each listed jumper's 2026 season best, or the final mark for Division II programs. Hollow dots were juniors or seniors in 2026. Class years cannot see redshirts, transfers or the next two recruiting classes.",
+  champs_heading = function(meet_name, event_code) paste0(meet_name, " · ", copy_event_names[[event_code]], " final"),
+  champs_note = "Championship results show a program's finalists at one meet, not its full event group.",
+  place = "Place",
+  no_height = "NH",
+  no_mark = "NM",
+  note_heading = "Board note",
+  coaches_heading = "Coaches",
+  coaches_empty = "No coach on file yet.",
+  coach_staff_link = "Staff page ↗",
+  log_heading = "Outreach log",
+  log_empty = "No contact logged yet.",
+  next_step = "Next step",
+  sent = "Sent",
+  received = "Received",
+  private_missing = "Coach contacts and the outreach log are not set up on this computer. Run dev/init_private_data.R to create them in inst/private/, which stays out of git.",
+  private_problems = "Some rows in your contact files could not be read:",
+  kpi_programs = "Programs on the board",
+  kpi_programs_note = function(d1, d2) paste0(d1, " Division I · ", d2, " Division II"),
+  kpi_coaches = "Coaches on file",
+  kpi_coaches_note = function(total) paste0("programs out of ", total),
+  kpi_contacted = "Programs contacted",
+  kpi_contacted_note = function(replies) paste0(replies, " with a reply"),
+  kpi_next = "Next follow-up",
+  kpi_next_none = "—",
+  kpi_next_note = function(school) if (is.na(school)) "nothing scheduled" else school,
+  footer = "Board groups and notes are set by hand in data-raw/manual/target_board.csv. Fit reads and ranks come from the 2026 TFRRS lists; Division II evidence comes from the 2026 championship finals."
+)

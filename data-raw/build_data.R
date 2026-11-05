@@ -6,17 +6,25 @@
 # Inputs
 #   data-raw/source/tfrrs_lists/*.csv     TFRRS performance-list exports
 #                                          (one file per list or per batch)
+#   data-raw/source/tfrrs_results/*.csv   championship finals (evidence for
+#                                          divisions with no lists loaded)
 #   data-raw/source/tfrrs_team_registry.csv
 #   data-raw/manual/school_name_crosswalk.csv   human-edited
 #   data-raw/manual/verification_ledger.csv     human-edited, append-only
+#   data-raw/manual/target_board.csv            human-edited shortlist
 #
 # Outputs (inst/extdata/)
-#   programs.csv         one row per program
-#   event_lists.csv      one row per event x season x division list
-#   athlete_marks.csv    one row per athlete x list (season best)
-#   program_events.csv   one row per program x list, with coverage_state
-#   build_info.yml       what was built, from what, and when
-#   build_report.md      counts and coverage for review
+#   programs.csv             one row per program
+#   event_lists.csv          one row per event x season x division list
+#   athlete_marks.csv        one row per athlete x list (season best)
+#   program_events.csv       one row per program x list, with coverage_state
+#   board.csv                one row per board program
+#   championship_marks.csv   one row per meet x event x round x athlete
+#   build_info.yml           what was built, from what, and when
+#   build_report.md          counts and coverage for review
+#
+# Not built here: coach contacts and the outreach log. They are private,
+# live in inst/private/ (gitignored) and are read by the app at runtime.
 
 pkgload::load_all(export_all = TRUE, helpers = FALSE, quiet = TRUE)
 
@@ -38,6 +46,19 @@ ledger <- readr::read_csv(file.path(man, "verification_ledger.csv"), col_types =
 
 tables <- build_app_tables(raw_lists, registry, crosswalk, ledger)
 
+# --- Board tables --------------------------------------------------------------
+result_files <- list.files(file.path(src, "tfrrs_results"), pattern = "\\.csv$", full.names = TRUE)
+raw_results <- result_files |>
+  purrr::map(\(f) readr::read_csv(f, col_types = readr::cols(.default = readr::col_character()), progress = FALSE)) |>
+  purrr::list_rbind()
+if (length(result_files) == 0) {
+  raw_results <- tibble::as_tibble(stats::setNames(rep(list(character()), length(results_export_columns())), results_export_columns()))
+}
+board_manual <- readr::read_csv(file.path(man, "target_board.csv"), col_types = readr::cols(.default = readr::col_character()), progress = FALSE)
+
+board_tables <- build_board_tables(board_manual, raw_results, tables$programs, registry, crosswalk)
+tables <- c(tables, board_tables)
+
 purrr::iwalk(tables, \(tbl, name) readr::write_csv(tbl, file.path(out, paste0(name, ".csv")), na = ""))
 
 # --- Build info --------------------------------------------------------------
@@ -45,6 +66,7 @@ lists <- tables$event_lists
 build_info <- list(
   built_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z"),
   source_files = basename(list_files),
+  result_files = basename(result_files),
   lists = purrr::pmap(lists, \(list_id, list_size, floor_mark_m, latest_meet_date, parsed_at, source_url, ...) list(
     list_id = list_id,
     size = list_size,
@@ -92,6 +114,18 @@ report <- c(
   "",
   "## Programs",
   paste0(nrow(tables$programs), " programs; ", sum(is.na(tables$programs$conference)), " without a conference mapping (Phase 2)."),
+  "",
+  "## Target board",
+  md_table(
+    tables$board |>
+      dplyr::count(.data$board_group, .data$division, .data$on_lists, name = "programs")
+  ),
+  "",
+  "## Championship results",
+  md_table(
+    tables$championship_marks |>
+      dplyr::count(.data$meet_id, .data$event_code, .data$result_status, name = "athletes")
+  ),
   ""
 )
 writeLines(report, file.path(out, "build_report.md"))

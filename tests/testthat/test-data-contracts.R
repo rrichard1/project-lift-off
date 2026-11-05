@@ -43,3 +43,26 @@ test_that("build info matches the tables", {
   expect_equal(d$build_info$row_counts$programs, nrow(d$programs))
   expect_equal(d$build_info$row_counts$athlete_marks, nrow(d$athlete_marks))
 })
+
+test_that("the committed board meets its contracts", {
+  d <- load_app_data()
+  expect_silent(validate_board_tables(d))
+  expect_setequal(unique(d$board$board_group), board_groups())
+  # Division I board programs are all on a loaded list today.
+  expect_true(all(d$board$on_lists[d$board$division == "D1"]))
+  # Every championship program on the board has results behind it.
+  d2 <- d$board$program_id[d$board$division == "D2"]
+  expect_true(all(d2 %in% d$championship_marks$program_id))
+})
+
+test_that("board notes follow the language rules", {
+  d <- load_app_data()
+  bad <- d$board$board_note[has_banned_language(d$board$board_note)]
+  expect_equal(bad, character(), label = paste(bad, collapse = "\n"))
+})
+
+test_that("private outreach files are never committed", {
+  path <- testthat::test_path("..", "..", ".gitignore")
+  skip_if_not(file.exists(path), "source files not available (installed package)")
+  expect_true("inst/private/" %in% readLines(path, warn = FALSE))
+})

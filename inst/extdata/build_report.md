@@ -1,6 +1,6 @@
 # Build report
 
-Built 2026-10-22T11:41:18-0400 from 2026_outdoor_d1_mens_jumps.csv.
+Built 2026-11-05T17:38:48-0500 from 2026_outdoor_d1_mens_jumps.csv.
 
 ## Lists
 | list_id | list_size | program_count | floor_mark_m | top_mark_m | latest_meet_date |
@@ -25,4 +25,19 @@ Built 2026-10-22T11:41:18-0400 from 2026_outdoor_d1_mens_jumps.csv.
 
 ## Programs
 257 programs; 257 without a conference mapping (Phase 2).
+
+## Target board
+| board_group | division | on_lists | programs |
+|---|---|---|---|
+| division_ii | D2 | FALSE | 9 |
+| established_group | D1 | TRUE | 12 |
+| power_conference | D1 | TRUE | 5 |
+| smaller_group | D1 | TRUE | 11 |
+
+## Championship results
+| meet_id | event_code | result_status | athletes |
+|---|---|---|---|
+| 2026_outdoor_D2_champs | HJ | mark | 20 |
+| 2026_outdoor_D2_champs | HJ | no_height | 2 |
+| 2026_outdoor_D2_champs | LJ | mark | 22 |
 

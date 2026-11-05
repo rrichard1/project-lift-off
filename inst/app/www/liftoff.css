@@ -274,3 +274,108 @@ body {
   margin: 1.5rem 0 2rem;
   line-height: 1.5;
 }
+
+/* ---- Target Board ---------------------------------------------------- */
+.lo-board { padding: 1rem 0 0; }
+.lo-board__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+.lo-board__controls .form-group { margin-bottom: 0; }
+.lo-board__controls .control-label { font-weight: 600; font-size: 0.85rem; margin-right: 0.75rem; }
+.lo-board__mark { margin: 0; font-size: 0.85rem; }
+.lo-board__strip-note { margin-top: 0.75rem; }
+
+/* Board group chips: neutral fills, one shape per group. Groups are a
+   hand-made sort of the shortlist, so they carry no accent colour. */
+.lo-group {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 0.28rem 0.5rem;
+  border-radius: 6px;
+  color: var(--lo-ink);
+  background: var(--lo-neutral-soft);
+  border: 1px solid transparent;
+}
+.lo-group--established_group { background: var(--lo-neutral-soft); }
+.lo-group--smaller_group { background: #fff; border-color: var(--lo-rule); }
+.lo-group--power_conference { background: #fff; border: 1px dashed var(--lo-faint); }
+.lo-group--division_ii { background: var(--lo-bg); border-color: var(--lo-neutral); color: var(--lo-muted); }
+.lo-ev__head .lo-group { margin-top: 0.45rem; }
+
+.lo-badge--no_list { background: #fff; color: var(--lo-muted); border: 1px solid var(--lo-rule); }
+
+/* Outreach state */
+.lo-contact { font-size: 0.8rem; white-space: nowrap; }
+.lo-contact--no_coach { color: var(--lo-faint); }
+.lo-contact--coach_on_file { color: var(--lo-muted); }
+.lo-contact--sent { color: var(--lo-ink); font-weight: 500; }
+.lo-contact--received { color: var(--lo-accent); font-weight: 600; }
+
+/* Bar-height strip: each listed jumper against the athlete's mark */
+.lo-strip2 { position: relative; height: 26px; min-width: 140px; }
+.lo-strip2__base {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--lo-rule);
+}
+.lo-strip2__you {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--lo-accent);
+}
+.lo-strip2__dot {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--lo-ink);
+  border: 1.5px solid var(--lo-ink);
+}
+.lo-strip2__dot--out { background: var(--lo-surface); }
+.lo-strip2-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.25rem;
+  font-size: 0.8rem;
+  color: var(--lo-muted);
+  margin-bottom: 0.75rem;
+}
+.lo-strip2-legend span { display: inline-flex; align-items: center; gap: 0.45rem; }
+.lo-strip2-legend .lo-strip2__dot--key { position: static; margin: 0; display: inline-block; }
+.lo-strip2-legend .lo-strip2__you--key { position: static; display: inline-block; height: 14px; margin: 0; }
+
+/* Evidence panel sections */
+.lo-ev__caption {
+  caption-side: top;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--lo-muted);
+  padding: 0 0 0.4rem;
+}
+.lo-board__section { border-top: 1px solid var(--lo-rule); padding-top: 0.8rem; margin: 0.9rem 0; }
+.lo-board__section-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--lo-muted);
+  margin: 0 0 0.45rem;
+}
+.lo-board__text { font-size: 0.92rem; margin: 0; line-height: 1.5; }
+.lo-board__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.7rem; }
+.lo-board__who { font-weight: 600; font-size: 0.9rem; }
+.lo-board__meta { font-size: 0.84rem; color: var(--lo-muted); line-height: 1.45; }
+.lo-board__select { user-select: all; color: var(--lo-ink); }

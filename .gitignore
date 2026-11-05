@@ -18,3 +18,7 @@ tmp_*
 # OS
 .DS_Store
 Thumbs.db
+
+# Private outreach data (DECISIONS D-009): coach contacts and the outreach
+# log stay on this computer. Templates live in inst/templates/.
+inst/private/

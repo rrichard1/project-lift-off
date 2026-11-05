@@ -10,3 +10,4 @@
 ^\.github$
 ^renv$
 ^renv\.lock$
+^inst/private$

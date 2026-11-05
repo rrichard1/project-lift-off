@@ -1,18 +1,6 @@
-# Language rules (CLAUDE.md rule 3). Do not weaken these patterns to make a
-# string pass; reword the string.
-
-banned_patterns <- c(
-  "scholarship",
-  "\\boffers?\\b",
-  "\\bopenings?\\b",
-  "roster spot",
-  "\\bneeds?\\b",
-  "\\blikel(y|ihood)\\b",
-  "guarantee",
-  "opportunit",
-  "will recruit",
-  "coach(es)? (want|plan|intend)"
-)
+# Language rules (CLAUDE.md rule 3). The banned patterns live in
+# helper-language.R so data-contract tests can apply them to board notes.
+# Do not weaken them to make a string pass; reword the string.
 
 string_literals <- function(path) {
   lines <- readLines(path, warn = FALSE)

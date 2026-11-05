@@ -17,6 +17,7 @@ app_ui <- function(request) {
     fillable = FALSE,
     header = golem_add_external_resources(),
     bslib::nav_panel(copy_page$title, mod_program_fit_ui("fit", athlete, events)),
+    bslib::nav_panel(copy_board$title, mod_board_ui("board", events)),
     bslib::nav_spacer(),
     bslib::nav_item(htmltools::span(class = "lo-nav-note", copy_nav_note))
   )

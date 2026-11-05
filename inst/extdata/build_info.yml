@@ -1,5 +1,6 @@
-built_at: 2026-10-22T11:41:18-0400
+built_at: 2026-11-05T17:38:48-0500
 source_files: 2026_outdoor_d1_mens_jumps.csv
+result_files: 2026_outdoor_d2_championships_mens_jumps.csv
 lists:
 - list_id: 2026_outdoor_D1_HJ
   size: 513
@@ -24,3 +25,5 @@ row_counts:
   event_lists: 3
   athlete_marks: 1505
   program_events: 771
+  board: 37
+  championship_marks: 44
