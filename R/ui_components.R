@@ -129,3 +129,86 @@ fit_strip <- function(counts) {
     htmltools::div(class = "lo-strip__legend", unname(legend))
   )
 }
+
+# ---- Target Board ---------------------------------------------------------
+
+#' @noRd
+html_board_group <- function(code) {
+  paste0(
+    '<span class="lo-group lo-group--', code, '" title="', esc(unname(copy_board_group_help[code])), '">',
+    esc(unname(copy_board_group_label[code])), "</span>"
+  )
+}
+
+#' Fit-read badge, or a neutral label when the program has no loaded list
+#' @noRd
+html_board_fit <- function(code, has_list) {
+  out <- rep(
+    paste0('<span class="lo-badge lo-badge--no_list" title="', esc(copy_board$no_list_help), '">', esc(copy_board$no_list), "</span>"),
+    length(has_list)
+  )
+  show <- has_list & !is.na(code)
+  out[show] <- html_fit_badge(code[show])
+  out
+}
+
+#' @noRd
+html_contact <- function(state, text) {
+  paste0('<span class="lo-contact lo-contact--', state, '">', esc(text), "</span>")
+}
+
+#' Scale for a board strip: the event's visible marks plus the athlete's
+#' @noRd
+strip_scale <- function(marks, athlete_mark_m) {
+  all <- c(marks, athlete_mark_m)
+  lo <- min(all, na.rm = TRUE)
+  hi <- max(all, na.rm = TRUE)
+  pad <- max((hi - lo) * 0.04, 0.02)
+  c(lo = lo - pad, hi = hi + pad)
+}
+
+#' Bar-height strip: one dot per jumper, a line at the athlete's mark
+#'
+#' Filled dots are jumpers still in school in the athlete's first season,
+#' hollow dots are not (context only, D-006).
+#'
+#' @param program_ids Board rows, in table order.
+#' @param marks `board_marks()` output.
+#' @param athlete_mark_m Athlete's mark.
+#' @param scale Named `lo`, `hi` from [strip_scale()].
+#' @return Character vector of HTML, one per program.
+#' @noRd
+html_mark_strip <- function(program_ids, marks, athlete_mark_m, scale) {
+  pct <- function(m) formatC((m - scale[["lo"]]) / (scale[["hi"]] - scale[["lo"]]) * 100, format = "f", digits = 2)
+  you <- paste0('<i class="lo-strip2__you" style="left:', pct(athlete_mark_m), '%"></i>')
+
+  by_program <- split(marks, marks$program_id)
+  vapply(program_ids, \(id) {
+    m <- by_program[[id]]
+    if (is.null(m) || nrow(m) == 0) {
+      return(paste0('<div class="lo-strip2 lo-strip2--empty">', you, "</div>"))
+    }
+    # Stack tied marks a few pixels apart so each jumper stays visible.
+    m <- m[order(-m$mark_m), ]
+    tie_rank <- stats::ave(m$mark_m, m$mark_m, FUN = seq_along) - 1
+    offset <- ifelse(tie_rank == 0, 0, ifelse(tie_rank %% 2 == 1, -1, 1) * ceiling(tie_rank / 2) * 7)
+    dots <- paste0(
+      '<i class="lo-strip2__dot', ifelse(m$in_school %in% FALSE, " lo-strip2__dot--out", ""), '" ',
+      'style="left:', pct(m$mark_m), "%;top:calc(50% + ", offset, 'px)" ',
+      'title="', formatC(m$mark_m, format = "f", digits = 2), " m · ", esc(m$class_code), '"></i>',
+      collapse = ""
+    )
+    paste0('<div class="lo-strip2"><i class="lo-strip2__base"></i>', you, dots, "</div>")
+  }, character(1), USE.NAMES = FALSE)
+}
+
+#' Legend for the board strip
+#' @noRd
+strip_legend <- function() {
+  htmltools::div(
+    class = "lo-strip2-legend",
+    htmltools::span(htmltools::tags$i(class = "lo-strip2__dot lo-strip2__dot--key"), copy_board$strip_in),
+    htmltools::span(htmltools::tags$i(class = "lo-strip2__dot lo-strip2__dot--out lo-strip2__dot--key"), copy_board$strip_out),
+    htmltools::span(htmltools::tags$i(class = "lo-strip2__you lo-strip2__you--key"), copy_board$strip_you)
+  )
+}

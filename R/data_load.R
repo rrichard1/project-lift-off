@@ -6,7 +6,7 @@
 #' @param dir Folder holding the built CSVs. Defaults to the installed
 #'   package's `extdata`.
 #' @return Named list: `programs`, `event_lists`, `athlete_marks`,
-#'   `program_events`, `build_info`.
+#'   `program_events`, `board`, `championship_marks`, `build_info`.
 #' @export
 load_app_data <- function(dir = app_sys("extdata")) {
   if (!nzchar(dir) || !dir.exists(dir)) {
@@ -45,6 +45,20 @@ load_app_data <- function(dir = app_sys("extdata")) {
       so = readr::col_integer(),
       jr = readr::col_integer(),
       sr = readr::col_integer(),
+      .default = readr::col_character()
+    )),
+    board = read("board.csv", readr::cols(
+      group_order = readr::col_integer(),
+      on_lists = readr::col_logical(),
+      .default = readr::col_character()
+    )),
+    championship_marks = read("championship_marks.csv", readr::cols(
+      meet_date = readr::col_date(),
+      season = readr::col_integer(),
+      place = readr::col_integer(),
+      eligibility_year = readr::col_integer(),
+      mark_m = readr::col_double(),
+      wind_mps = readr::col_double(),
       .default = readr::col_character()
     )),
     build_info = yaml::read_yaml(file.path(dir, "build_info.yml"))

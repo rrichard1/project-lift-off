@@ -7,11 +7,28 @@ app_server <- function(input, output, session) {
     reach_threshold_m = get_golem_config("reach_threshold_m")
   )
 
+  app_data <- app_data_cached()
+  athlete <- read_athlete_profile()
+
   mod_program_fit_server(
     "fit",
-    app_data = app_data_cached(),
-    athlete = read_athlete_profile(),
+    app_data = app_data,
+    athlete = athlete,
     settings = settings
+  )
+
+  # Coach contacts and the outreach log are read fresh for each session, so
+  # edits to the local files show up on the next page load.
+  private <- load_private_data(
+    known_ids = union(app_data$board$program_id, app_data$programs$program_id)
+  )
+
+  mod_board_server(
+    "board",
+    app_data = app_data,
+    athlete = athlete,
+    settings = settings,
+    private = private
   )
 }
 

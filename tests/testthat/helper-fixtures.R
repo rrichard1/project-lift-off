@@ -41,3 +41,38 @@ fixture_ledger <- function(rows = NULL) {
 fixture_tables <- function(ledger = fixture_ledger()) {
   build_app_tables(fixture_raw_lists(), fixture_registry(), fixture_crosswalk(), ledger)
 }
+
+# ---- Board fixtures -------------------------------------------------------
+
+fixture_raw_results <- function() {
+  tibble::tribble(
+    ~division, ~season, ~season_year, ~meet_name, ~meet_date, ~round, ~event_code, ~place, ~athlete, ~class_code, ~eligibility_year, ~team, ~mark_m, ~result_status, ~wind, ~source_url, ~retrieved_on,
+    "NCAA DII", "Outdoor", "2026", "Test Championships", "", "final", "HJ", "1", "D, One", "SO-2", "2", "Delta", "2.15", "mark", NA, "https://example.test/results", "2026-11-05",
+    "NCAA DII", "Outdoor", "2026", "Test Championships", "", "final", "HJ", "2", "D, Two", "SR-4", "4", "Delta", "2.00", "mark", NA, "https://example.test/results", "2026-11-05",
+    "NCAA DII", "Outdoor", "2026", "Test Championships", "", "final", "HJ", NA, "D, Three", "FR-1", "1", "Delta", NA, "no_height", NA, "https://example.test/results", "2026-11-05"
+  )
+}
+
+fixture_board_manual <- function() {
+  tibble::tribble(
+    ~program_id, ~division, ~board_group, ~board_note, ~added_on, ~added_by, ~source,
+    "AL_college_m_Beta", "D1", "smaller_group", "Test note.", "2026-11-05", "test", "fixture",
+    "GA_college_m_Alpha", "D1", "established_group", "Test note.", "2026-11-05", "test", "fixture",
+    "TX_college_m_Delta", "D2", "division_ii", "Test note.", "2026-11-05", "test", "fixture"
+  )
+}
+
+fixture_board_data <- function(board_manual = fixture_board_manual()) {
+  t <- fixture_tables()
+  b <- build_board_tables(board_manual, fixture_raw_results(), t$programs, fixture_registry(), fixture_crosswalk())
+  c(t, b)
+}
+
+#' Write private CSVs into a temp folder and return its path
+fixture_private_dir <- function(contacts = NULL, log = NULL) {
+  dir <- tempfile("private")
+  dir.create(dir)
+  if (!is.null(contacts)) readr::write_csv(contacts, file.path(dir, "coach_contacts.csv"), na = "")
+  if (!is.null(log)) readr::write_csv(log, file.path(dir, "outreach_log.csv"), na = "")
+  dir
+}

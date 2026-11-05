@@ -1,6 +1,6 @@
 # Lift Off — Product Spec (v1)
 
-_Last updated: 2026-10-22. Owner: Roland Richard._
+_Last updated: 2026-11-05 (Target Board, D-007 to D-009). Owner: Roland Richard._
 
 ## 1. The job
 
@@ -104,6 +104,33 @@ When a division has no lists loaded (D2 today), the app shows a notice instead o
 ### Manual inputs (`data-raw/manual/`, human-edited only)
 - `school_name_crosswalk.csv` — list name → registry name. Drives matching.
 - `verification_ledger.csv` — append-only; last row per program × event × season wins. Columns `program_id`, `event_code`, `season`, `status` (`active_event_group` / `no_marks_on_tfrrs` / `no_event_group`), `checked_on`, `checked_by`, `source_url`, `notes`. A ledger row that contradicts the lists stops the build.
+- `target_board.csv` — the athlete's shortlist (D-007). One row per program: `program_id`, `division`, `board_group`, `board_note`, `added_on`, `added_by`, `source`. Unknown ids, duplicates, unknown groups and a division that disagrees with the lists stop the build. Notes are tested against the language rules.
+
+### `board` — one row per board program
+Built from `target_board.csv`. `school_name`, `state` and `tfrrs_team_url` come from `programs` when the program is on a loaded list, otherwise from the TFRRS team registry (`on_lists` says which).
+
+| Column | Notes |
+|---|---|
+| `program_id` | **Key.** TFRRS team slug |
+| `board_group` | `established_group` / `smaller_group` / `power_conference` / `division_ii`. A hand-made sort of the shortlist, **not** a fit read and never computed |
+| `group_order` | Display order of the group |
+| `board_note` | Short factual note, human-written |
+| `on_lists` | TRUE when the program appears on a loaded list |
+| `division`, `school_name`, `state`, `tfrrs_team_url`, `added_on`, `added_by`, `source` | |
+
+### `championship_marks` — one row per meet × event × round × athlete
+Championship finals used as evidence where no list is loaded (D2 today, D-008). Source files in `data-raw/source/tfrrs_results/`, team names matched with the same crosswalk rules as the lists.
+
+`meet_id` (`<season>_<season_type>_<division>_champs`), `meet_name`, `meet_date` (`NA` when not on the results page), `season`, `season_type`, `division`, `event_code`, `round`, `place` (`NA` for no height / no mark), `program_id`, `list_team_name`, `athlete_name`, `class_code`, `class_group`, `eligibility_year`, `mark_m`, `result_status` (`mark` / `no_height` / `no_mark`), `wind_mps`, `wind_status`, `source_url`, `retrieved_on`.
+
+A final shows a program's best finishers at one meet, not its event group, so championship marks never feed `program_events` or a fit read.
+
+### Private outreach files (`inst/private/`, gitignored, D-009)
+Read by the app at runtime; never built, never committed. Templates with the headers live in `inst/templates/`; `dev/init_private_data.R` creates the files. `LIFTOFF_PRIVATE_DIR` overrides the folder.
+- `coach_contacts.csv` — one row per program × coach: `program_id`, `coach_name`, `coach_title`, `events_coached`, `email`, `phone`, `staff_page_url`, `checked_on`, `source_url`, `notes`.
+- `outreach_log.csv` — one row per contact, append-only: `program_id`, `contact_date`, `direction` (`sent` / `received`), `channel` (`email` / `call` / `text` / `social` / `questionnaire` / `visit` / `camp` / `meet` / `other`), `coach_name`, `summary`, `next_step`, `next_step_date`.
+
+Missing files load as empty tables. Rows that break the rules are listed in a notice on the Board page instead of stopping the app.
 
 ## 6. Metrics (per program × event, given the athlete's mark _m_)
 
@@ -141,6 +168,13 @@ Labels describe a role, not a recommendation. Whether leading a weaker group or 
 - Program table: program, state, fit read, rank on 2026 list, program best, gap, coverage.
 - Evidence panel: click a program to see its listed athletes for the event with the athlete's mark slotted in.
 
+**v1.1 — Target Board** (D-007)
+- Event toggle; marks come from the athlete profile.
+- Summary cards: programs on the board by division, coaches on file, programs contacted and replies, next follow-up date.
+- Board table: group, program, fit read (or "No list loaded"), rank on the 2026 list, program best (list best, or best final mark for D2), a bar-height strip of the program's jumpers against the athlete's mark, and outreach state (no coach on file / coach on file / sent / reply).
+- Evidence panel: the Program Fit evidence for listed programs; for D2, the program's finalists with the athlete's mark slotted in and where that mark would have placed in the final. Then the board note, coaches on file and the outreach log.
+- The strip's filled and hollow dots use the same in-school-at-arrival rule as the evidence panel and carry the same caveat (D-006). They never set a label.
+
 **Phase 2 — Programs**: conference mapping and conference-meet scoring marks ("would have placed 5th at SoCon"), jumps coach on staff, verification workflow.
 **Phase 3 — Shortlist**: location (IPEDS coordinates, map), academic fit (IPEDS admissions), cost; a personal shortlist with notes.
 
@@ -152,6 +186,7 @@ Labels describe a role, not a recommendation. Whether leading a weaker group or 
 | 1b | Same for D2 | 2026 D2 outdoor HJ/LJ lists (port the v0 list parser into `data-raw/`) |
 | 1c | Refresh with 2027 indoor lists (Jan–Mar 2027) | Shows current college freshmen the 2026 lists can't |
 | 2 | Conference scoring marks, coach/staff, verification | TFRRS conference results; league pages in `tfrrs_conference_inventory.csv` |
+| 1d (done) | Target Board with D2 championship evidence and private contact files | `target_board.csv`, 2026 D2 outdoor finals |
 | 3 | Map, academics, shortlist | IPEDS HD + ADM files |
 
 ## 10. Decisions waiting on Roland
@@ -160,3 +195,5 @@ Labels describe a role, not a recommendation. Whether leading a weaker group or 
 2. Confirm or change the reach thresholds (HJ 0.15 m, LJ 0.45 m).
 3. D2 source: rerun the v0 list parser on D2 lists, or pull TFRRS team pages for deeper rosters.
 4. Repo name and hosting (Posit Connect vs. local only).
+5. Board group names and the 37 programs on the board (D-007).
+6. Whether coach contacts should deploy to Posit Connect (D-009): `rsconnect` bundles `inst/private/` if it exists on the deploying computer.
